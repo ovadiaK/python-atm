@@ -38,6 +38,6 @@ def set_string_to_hello_world(client):
     pytest.response = client.get("/health")
 
 
-@then('server responds with status ok')
+@then('server responds with pong')
 def string_equals_hello_world():
     assert pytest.response.data == b'pong'

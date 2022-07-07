@@ -4,4 +4,4 @@ Feature: Server APIs basic functions
   Scenario: server starts and passed health checks
     Given server is running
     When querying the health endpoint
-    Then server responds with status ok
+    Then server responds with pong
