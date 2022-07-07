@@ -11,10 +11,7 @@ FEATURE_FILE = BASE_DIR.joinpath('features').joinpath(featureFile).__str__()
 
 @pytest.fixture
 def app():
-    """Create and configure a new app instance for each test."""
-    # create a temporary file to isolate the database for each test
-    # create the app with common test config
-    app = create_app({"TESTING": True})
+    app = create_app()
 
     return app
 
@@ -31,26 +28,22 @@ def test_server():
     pass
 
 
-print(FEATURE_FILE)
-
-
 def pytest_configure():
-    pytest.server = app
     pytest.response = ''
 
 
 @given('server is running')
 def running():
-    print("running")
+    print("\nserver running\n")
 
 
 @when('querying the health endpoint')
-def set_string_to_hello_world(client):
+def query_health_endpoint(client):
     pytest.response = client.get("/health")
 
 
 @then('server responds with pong')
-def string_equals_hello_world():
+def server_responds_pong():
     assert pytest.response.data == b'pong'
 
 
@@ -62,6 +55,7 @@ def test_withdrawing_one_dollar():
 
 @given('atm is loaded with 1$ coin')
 def load_one_dollar(client):
+    client.post("fill")
     pass
 
 
