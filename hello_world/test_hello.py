@@ -2,9 +2,11 @@ from pytest_bdd import scenario, given, when, then
 from pathlib import Path
 import pytest
 
+from hello_world import set_hello_world
+
 featureFile = 'hello.feature'
 BASE_DIR = Path(__file__).resolve().parent
-FEATURE_FILE = BASE_DIR.joinpath(featureFile)
+FEATURE_FILE = BASE_DIR.joinpath('behavior').joinpath(featureFile)
 
 
 def pytest_configure():
@@ -24,7 +26,7 @@ def empty_string():
 
 @when('the string is set to hello world')
 def set_string_to_hello_world():
-    pytest.String = 'hello world'
+    pytest.String = set_hello_world()
 
 
 @then('the string is hello world')
