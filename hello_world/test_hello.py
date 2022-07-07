@@ -13,7 +13,7 @@ def pytest_configure():
     pytest.STRING = ''
 
 
-@scenario(FEATURE_FILE, 'Printing hello world')
+@scenario(FEATURE_FILE.__str__(), 'Printing hello world')
 def test_hello_world():
     print("End of hello world test")
     pass
