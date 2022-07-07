@@ -5,3 +5,9 @@ Feature: Server APIs basic functions
     Given server is running
     When querying the health endpoint
     Then server responds with pong
+
+  Scenario: withdrawing 1$ returns 1$ coin
+      Given server is running
+      And atm is loaded with 1$ coin
+      When withdrawing 1$
+      Then receiving 1$ coin
