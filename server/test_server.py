@@ -12,14 +12,13 @@ FEATURE_FILE = BASE_DIR.joinpath('features').joinpath(featureFile).__str__()
 @pytest.fixture
 def app():
     app = create_app()
-
     return app
 
 
 @pytest.fixture
 def client(app):
     with app.test_client() as client:
-        yield client
+        return client
 
 
 @scenario(FEATURE_FILE, 'server starts and passed health checks')
@@ -55,10 +54,30 @@ def test_withdrawing_one_dollar():
 
 @when('withdrawing 1$')
 def withdrawing_one_dollar(client):
-    rv = client.put("/withdraw?=1")
+    withdraw_amount(client, 1)
+
+
+def withdraw_amount(client, amount):
+    rv = client.put("/withdraw")
     pytest.response = rv.get_json()
 
 
 @then('receiving 1$ coin')
 def receiving_one_dollar():
-    assert pytest.response == {"coins": {"1": 1}}
+    assert pytest.response == {"result": {"bills": [{}], "coins": [{"1": 1}]}}
+
+
+@scenario(FEATURE_FILE, 'withdrawing 20$ should return bills')
+def test_return_20_dollar():
+    print("End of withdrawing 20$ test")
+    pass
+
+
+@when('withdrawing 20$')
+def withdrawing_20_dollar(client):
+    withdraw_amount(client, 20)
+
+
+@then('receiving 20$ bill')
+def receiving_20_dollar_bill():
+    assert pytest.response == {"result": {"bills": [{"20": 1}], "coins": [{}]}}

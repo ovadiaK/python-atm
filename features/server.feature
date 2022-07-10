@@ -11,3 +11,7 @@ Feature: Server APIs basic functions
       When withdrawing 1$
       Then receiving 1$ coin
 
+Scenario: withdrawing 20$ should return bills
+  Given server is running
+  When withdrawing 20$
+  Then receiving 20$ bill
