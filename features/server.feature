@@ -29,5 +29,12 @@ Scenario: withdrawing 20$ should return bills
 
       Scenario: withdrawing is limited to 2000$
         Given server is running
-        When withdrawing 3000$
+        When withdrawing 2200$
         Then receiving only 2000$
+
+        Scenario: too many coins will throw exception
+          Given server is running
+          And no bills left
+          When withdrawing all coins
+          Then too many coins exception is thrown
+

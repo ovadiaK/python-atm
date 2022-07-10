@@ -124,11 +124,34 @@ def test_more_than_2000():
     pass
 
 
-@when('withdrawing 3000$')
+@when('withdrawing 2200$')
 def withdrawing_too_much(client):
     withdraw_amount(client, 3000)
 
 
 @then('receiving only 2000$')
 def receive_max():
-    assert pytest.json == {"result": {"bills": [{"200": 10}], "coins": [{}]}}
+    assert pytest.json == {'result': {'bills': [{'100': 4, '20': 10, '200': 7}], 'coins': [{}]}}
+
+
+@scenario(FEATURE_FILE, 'too many coins will throw exception')
+def test_too_many_coins():
+    print('throwing too many coins exception passed')
+    pass
+
+
+@given('no bills left')
+def withdraw_all_bills(client):
+    withdraw_amount(client, 2000)
+    withdraw_amount(client, 100)
+
+
+@when('withdrawing all coins')
+def withdraw_all_coins(client):
+    withdraw_amount(client, 116.40)
+
+
+@then('too many coins exception is thrown')
+def too_many_coins_exception():
+    assert pytest.response.status_code == 409
+    assert pytest.json == {"error": "TooManyCoinsException"}
