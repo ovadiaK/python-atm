@@ -31,6 +31,8 @@ def create_app():
         param = request.get_json()
         amount = param["amount"]
         amount = math.floor(amount*10)/10
+        if amount > 2000:
+            amount = 2000
         res = atm.withdraw(amount)
         if 'maximum' in res:
             response = jsonify(res)
@@ -48,7 +50,7 @@ def create_datastore():
 class datastore:
     def __init__(self):
         self.values = [200, 100, 20, 10, 5, 1, 0.1, 0.01]
-        self.bills = {"200": 7, "100": 4, "20": 15}
+        self.bills = {"200": 20, "100": 4, "20": 15}
         self.coins = {"10": 10, "5": 1, "1": 10, "0.1": 12, "0.01": 21}
 
     def withdraw(self, amount):

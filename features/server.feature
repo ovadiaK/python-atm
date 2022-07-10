@@ -26,3 +26,8 @@ Scenario: withdrawing 20$ should return bills
       Given server is running
       When withdrawing 20.00001$
       Then receiving 20$ bill
+
+      Scenario: withdrawing is limited to 2000$
+        Given server is running
+        When withdrawing 3000$
+        Then receiving only 2000$

@@ -116,3 +116,19 @@ def test_too_small_decimal():
 @when('withdrawing 20.00001$')
 def withdrawing_too_small(client):
     withdraw_amount(client, 20.00001)
+
+
+@scenario(FEATURE_FILE, 'withdrawing is limited to 2000$')
+def test_more_than_2000():
+    print('withdrawing more than 2000 test passed')
+    pass
+
+
+@when('withdrawing 3000$')
+def withdrawing_too_much(client):
+    withdraw_amount(client, 3000)
+
+
+@then('receiving only 2000$')
+def receive_max():
+    assert pytest.json == {"result": {"bills": [{"200": 10}], "coins": [{}]}}
