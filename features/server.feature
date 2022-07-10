@@ -15,3 +15,14 @@ Scenario: withdrawing 20$ should return bills
   Given server is running
   When withdrawing 20$
   Then receiving 20$ bill
+
+  Scenario: withdrawing more money than loaded
+    Given server is running
+    And is loaded with 1000$
+    When withdrawing 1200$
+    Then error 409 and max amount is returned
+
+    Scenario: withdrawing with too small decimal will be floored
+      Given server is running
+      When withdrawing 20.00001$
+      Then receiving 20$ bill

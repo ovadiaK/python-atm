@@ -29,6 +29,7 @@ def test_server():
 
 def pytest_configure():
     pytest.response = ''
+    pytest.json = ''
 
 
 @given('server is running')
@@ -58,13 +59,14 @@ def withdrawing_one_dollar(client):
 
 
 def withdraw_amount(client, amount):
-    rv = client.post("/withdrawal")
-    pytest.response = rv.get_json()
+    rv = client.post("/withdrawal", json={"amount": amount})
+    pytest.response = rv
+    pytest.json = rv.get_json()
 
 
 @then('receiving 1$ coin')
 def receiving_one_dollar():
-    assert pytest.response == {"result": {"bills": [{}], "coins": [{"1": 1}]}}
+    assert pytest.json == {"result": {"bills": [{}], "coins": [{"1": 1}]}}
 
 
 @scenario(FEATURE_FILE, 'withdrawing 20$ should return bills')
@@ -80,4 +82,37 @@ def withdrawing_20_dollar(client):
 
 @then('receiving 20$ bill')
 def receiving_20_dollar_bill():
-    assert pytest.response == {"result": {"bills": [{"20": 1}], "coins": [{}]}}
+    assert pytest.json == {"result": {"bills": [{"20": 1}], "coins": [{}]}}
+
+
+@scenario(FEATURE_FILE, 'withdrawing more money than loaded')
+def test_more_than_max_amount(client):
+    print("End of test more than allowed amount")
+    pass
+
+
+@given('is loaded with 1000$')
+def withdraw_until_1000(client):
+    withdraw_amount(client, 1216.41)
+
+
+@when('withdrawing 1200$')
+def withdrawing_1200(client):
+    withdraw_amount(client, 1200)
+
+
+@then('error 409 and max amount is returned')
+def more_than_exists():
+    assert pytest.response.status_code == 409
+    assert pytest.json == {"maximum": 1000}
+
+
+@scenario(FEATURE_FILE, 'withdrawing with too small decimal will be floored')
+def test_too_small_decimal():
+    print("too small decimal test passed")
+    pass
+
+
+@when('withdrawing 20.00001$')
+def withdrawing_too_small(client):
+    withdraw_amount(client, 20.00001)
