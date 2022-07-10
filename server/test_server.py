@@ -58,7 +58,7 @@ def withdrawing_one_dollar(client):
 
 
 def withdraw_amount(client, amount):
-    rv = client.put("/withdraw")
+    rv = client.post("/withdrawal")
     pytest.response = rv.get_json()
 
 

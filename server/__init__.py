@@ -24,12 +24,10 @@ def create_app():
     # def fill():
     #     print("money in")
 
-    @app.route("/withdraw", methods=['PUT'])
+    @app.route("/withdrawal", methods=['POST'])
     def withdraw():
-        res = atm.withdraw(20)
+        res = atm.withdraw(1)
         return res
-
-
 
     return app
 
