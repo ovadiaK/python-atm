@@ -10,3 +10,4 @@ Feature: Server APIs basic functions
       Given server is running
       When withdrawing 1$
       Then receiving 1$ coin
+

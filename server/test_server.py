@@ -61,5 +61,4 @@ def withdrawing_one_dollar(client):
 
 @then('receiving 1$ coin')
 def receiving_one_dollar():
-    assert pytest.response == {"1": 1}
-
+    assert pytest.response == {"coins": {"1": 1}}
