@@ -24,6 +24,7 @@ def create_app():
 
     @app.route("/withdraw", methods=['PUT'])
     def withdraw():
+        return {"1": 1}
         print("money out")
 
     return app

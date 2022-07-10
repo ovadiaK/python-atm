@@ -53,17 +53,13 @@ def test_withdrawing_one_dollar():
     pass
 
 
-@given('atm is loaded with 1$ coin')
-def load_one_dollar(client):
-    client.post("fill")
-    pass
-
-
 @when('withdrawing 1$')
 def withdrawing_one_dollar(client):
-    pass
+    rv = client.put("/withdraw?=1")
+    pytest.response = rv.get_json()
 
 
 @then('receiving 1$ coin')
 def receiving_one_dollar():
-    pass
+    assert pytest.response == {"1": 1}
+
