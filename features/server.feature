@@ -63,3 +63,8 @@ Scenario: refill api can refill the atm money
       Given server is running
       When refilling 250$ bill
       Then server responds with 400
+
+      Scenario: refill with invalid coin
+        Given server is running
+        When refilling with 6$ coin
+        Then server responds with 400

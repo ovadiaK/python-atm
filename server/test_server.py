@@ -232,3 +232,16 @@ def client_error():
     assert pytest.response.status_code == 400
 
 
+invalid_coin = 'refill with invalid coin'
+
+
+@scenario(FEATURE_FILE, invalid_coin)
+def test_invalid_coin():
+    print(invalid_coin, "passed")
+    pass
+
+
+@when('refilling with 6$ coin')
+def refill_invalid_coin(client):
+    json_struct = {"bills": {}, "coins": {"6": 1}}
+    refill_atm(client, json_struct)

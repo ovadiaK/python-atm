@@ -5,11 +5,15 @@ from flask import Flask, make_response, request, jsonify, json, Response, render
 from werkzeug.exceptions import abort
 
 valid_bills = {"200", "100", "20"}
+valid_coins = {"10", "5", "1", "0.1", "0.01"}
 
 
 def input_is_valid(money_input):
     for bill in money_input.bills:
         if bill not in valid_bills:
+            return False
+    for coin in money_input.coins:
+        if coin not in valid_coins:
             return False
     return True
 
