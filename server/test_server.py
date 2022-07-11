@@ -155,3 +155,27 @@ def withdraw_all_coins(client):
 def too_many_coins_exception():
     assert pytest.response.status_code == 409
     assert pytest.json == {"error": "TooManyCoinsException"}
+
+
+@scenario(FEATURE_FILE, 'refill api responds with status 200')
+def test_refill_responds_ok():
+    print('refill api responds with status 200 passed')
+    pass
+
+
+@scenario(FEATURE_FILE, 'refill api can refill the atm money')
+def test_refill_20_dollar():
+    print('refill api can refill the atm money passed')
+    pass
+
+
+@when('refilling 20$ bill')
+def refilling_20_dollar(client):
+    rv = client.post("/refill", json={"bills": {"20": 1}})
+    pytest.response = rv
+    pytest.json = rv.get_json()
+
+
+@then('server responds with 200 status ok')
+def status_ok():
+    assert pytest.response.status_code == 200

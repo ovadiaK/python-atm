@@ -22,9 +22,14 @@ def create_app():
         resp = make_response("pong", 200)
         return resp
 
-    # @app.route("/fill", methods=['POST'])
-    # def fill():
-    #     print("money in")
+    @app.route("/refill", methods=['POST'])
+    def refill():
+        param = request.get_json()
+        input_money = transfer()
+        input_money.bills = param["bills"]
+        atm.refill(input_money)
+        print("money in")
+        return "ok"
 
     @app.route("/withdrawal", methods=['POST'])
     def withdraw():
@@ -97,6 +102,10 @@ class datastore:
             if amount < current_value:
                 break
         return amount
+
+    def refill(self, money_input):
+        for bill in money_input.bills:
+            self.bills[bill] += money_input.bills[bill]
 
 
 class transfer:

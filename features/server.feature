@@ -38,3 +38,15 @@ Scenario: withdrawing 20$ should return bills
           When withdrawing all coins
           Then too many coins exception is thrown
 
+          Scenario: refill api responds with status 200
+            Given server is running
+            When refilling 200$ bill
+            Then server responds with 200 status ok
+
+
+Scenario: refill api can refill the atm money
+  Given server is running
+  And no bills left
+  When refilling 20$ bill
+  When withdrawing 20$
+  Then receiving 20$ bill
