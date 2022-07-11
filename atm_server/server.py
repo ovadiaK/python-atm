@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 
-from store import create_datastore, transfer
+from store.datastore import create_datastore, transfer
 
 valid_bills = {"200", "100", "20"}
 valid_coins = {"10", "5", "1", "0.1", "0.01"}
