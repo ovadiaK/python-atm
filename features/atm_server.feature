@@ -22,26 +22,26 @@ Scenario: withdrawing 20$ should return bills
     When withdrawing 1200$
     Then error 409 and max amount is returned
 
-    Scenario: withdrawing with too small decimal will be floored
-      Given server is running
-      When withdrawing 20.00001$
-      Then receiving 20$ bill
+  Scenario: withdrawing with too small decimal will be floored
+    Given server is running
+    When withdrawing 20.00001$
+    Then receiving 20$ bill
 
-      Scenario: withdrawing is limited to 2000$
-        Given server is running
-        When withdrawing 2200$
-        Then receiving only 2000$
+  Scenario: withdrawing is limited to 2000$
+    Given server is running
+    When withdrawing 2200$
+    Then receiving only 2000$
 
-        Scenario: too many coins will throw exception
-          Given server is running
-          And no bills left
-          When withdrawing all coins
-          Then too many coins exception is thrown
+  Scenario: too many coins will throw exception
+    Given server is running
+    And no bills left
+    When withdrawing all coins
+    Then too many coins exception is thrown
 
-          Scenario: refill api responds with status 200
-            Given server is running
-            When refilling 20$ bill
-            Then server responds with 200 status ok
+  Scenario: refill api responds with status 200
+    Given server is running
+    When refilling 20$ bill
+    Then server responds with 200 status ok
 
 
 Scenario: refill api can refill the atm money
@@ -64,7 +64,7 @@ Scenario: refill api can refill the atm money
       When refilling 250$ bill
       Then server responds with 400
 
-      Scenario: refill with invalid coin
-        Given server is running
-        When refilling with 6$ coin
-        Then server responds with 400
+  Scenario: refill with invalid coin
+    Given server is running
+    When refilling with 6$ coin
+    Then server responds with 400
