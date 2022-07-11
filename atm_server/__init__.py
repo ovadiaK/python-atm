@@ -22,12 +22,6 @@ def create_app():
     # create and configure the app
     app = Flask(__name__)
 
-    # ensure the instance folder exists
-    try:
-        os.makedirs(app.instance_path)
-    except OSError:
-        pass
-
     atm = create_datastore()
 
     @app.route("/health")
