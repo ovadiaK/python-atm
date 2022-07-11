@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 
-from store.datastore import create_datastore, transfer
+from store.datastore import create_datastore, transfer, exception
 
 valid_bills = {"200", "100", "20"}
 valid_coins = {"10", "5", "1", "0.1", "0.01"}
@@ -40,7 +40,7 @@ def create_app():
         res = atm.withdraw(amount)
         if 'maximum' in res:
             return jsonify(res), 409
-        if res is 'TooManyCoinsException':
+        if res is exception:
             return jsonify({"error": res}), 409
         return res
 

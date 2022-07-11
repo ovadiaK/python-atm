@@ -5,6 +5,9 @@ def create_datastore():
     return datastore()
 
 
+exception = "TooManyCoinsException"
+
+
 class datastore:
     def __init__(self):
         self.values = [200, 100, 20, 10, 5, 1, 0.1, 0.01]
@@ -23,7 +26,7 @@ class datastore:
         if not math.isclose(amount, 0, abs_tol=0.001):
             return {"maximum": result.amount}
         if result.coin_count > 50:
-            return "TooManyCoinsException"
+            return exception
         res = {"result": {"bills": [result.bills], "coins": [result.coins]}}
         return res
 
