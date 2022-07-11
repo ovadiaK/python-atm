@@ -1,6 +1,4 @@
-import os
-
-from flask import Flask, make_response, request, jsonify
+from flask import Flask, request, jsonify
 
 from store import create_datastore, transfer
 
@@ -26,8 +24,7 @@ def create_app():
 
     @app.route("/health")
     def health():
-        resp = make_response("pong", 200)
-        return resp
+        return "pong", 200
 
     @app.route("/refill", methods=['POST'])
     def refill():
