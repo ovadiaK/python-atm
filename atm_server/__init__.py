@@ -31,10 +31,7 @@ def create_app():
 
     @app.route("/refill", methods=['POST'])
     def refill():
-        param = request.get_json()
-        input_money = transfer()
-        input_money.bills = param["bills"]
-        input_money.coins = param["coins"]
+        input_money = parse_refill_input()
         if not input_is_valid(input_money):
             response = jsonify("invalid currency")
             response.status_code = 400
@@ -44,11 +41,7 @@ def create_app():
 
     @app.route("/withdrawal", methods=['POST'])
     def withdraw():
-        param = request.get_json()
-        amount = param["amount"]
-        amount = round(amount, 2)
-        if amount > 2000:
-            amount = 2000
+        amount = parse_withdrawal_input()
         res = atm.withdraw(amount)
         if 'maximum' in res:
             response = jsonify(res)
@@ -60,3 +53,19 @@ def create_app():
 
     return app
 
+
+def parse_withdrawal_input():
+    param = request.get_json()
+    amount = param["amount"]
+    amount = round(amount, 2)
+    if amount > 2000:
+        amount = 2000
+    return amount
+
+
+def parse_refill_input():
+    param = request.get_json()
+    input_money = transfer()
+    input_money.bills = param["bills"]
+    input_money.coins = param["coins"]
+    return input_money
