@@ -171,7 +171,12 @@ def test_refill_20_dollar():
 
 @when('refilling 20$ bill')
 def refilling_20_dollar(client):
-    rv = client.post("/refill", json={"bills": {"20": 1}})
+    json_struct = {"bills": {"20": 1}, "coins": {}}
+    refill_atm(client, json_struct)
+
+
+def refill_atm(client, json_struct):
+    rv = client.post("/refill", json=json_struct)
     pytest.response = rv
     pytest.json = rv.get_json()
 
@@ -179,3 +184,51 @@ def refilling_20_dollar(client):
 @then('server responds with 200 status ok')
 def status_ok():
     assert pytest.response.status_code == 200
+
+
+refill_coins = 'refill empty atm with coins'
+
+
+@scenario(FEATURE_FILE, refill_coins)
+def test_refill_coins():
+    print(refill_coins, "passed")
+    pass
+
+
+@given('atm has only change left')
+def atm_empty(client):
+    withdraw_all_bills(client)
+    withdraw_amount(client, 115)
+
+
+@when('refilling 4 5$ coins')
+def refill_4_5_dollar_coins(client):
+    json_struct = {"bills": {}, "coins": {"5": 4}}
+    refill_atm(client, json_struct)
+
+
+@then('receiving 4 5$ coins')
+def got_4_5_dollar_coins():
+    assert pytest.json == {"result": {"bills": [{}], "coins": [{"5": 4}]}}
+
+
+invalid_bill = 'refill with invalid bill'
+
+
+@scenario(FEATURE_FILE, invalid_bill)
+def test_invalid_bill():
+    print(invalid_bill, "passed")
+    pass
+
+
+@when('refilling 250$ bill')
+def refill_invalid_bill(client):
+    json_struct = {"bills": {"250": 1}, "coins": {}}
+    refill_atm(client, json_struct)
+
+
+@then('server responds with 400')
+def client_error():
+    assert pytest.response.status_code == 400
+
+

@@ -4,6 +4,15 @@ import os
 from flask import Flask, make_response, request, jsonify, json, Response, render_template
 from werkzeug.exceptions import abort
 
+valid_bills = {"200", "100", "20"}
+
+
+def input_is_valid(money_input):
+    for bill in money_input.bills:
+        if bill not in valid_bills:
+            return False
+    return True
+
 
 def create_app():
     # create and configure the app
@@ -27,8 +36,12 @@ def create_app():
         param = request.get_json()
         input_money = transfer()
         input_money.bills = param["bills"]
+        input_money.coins = param["coins"]
+        if not input_is_valid(input_money):
+            response = jsonify("invalid currency")
+            response.status_code = 400
+            return response
         atm.refill(input_money)
-        print("money in")
         return "ok"
 
     @app.route("/withdrawal", methods=['POST'])
@@ -106,6 +119,8 @@ class datastore:
     def refill(self, money_input):
         for bill in money_input.bills:
             self.bills[bill] += money_input.bills[bill]
+        for coin in money_input.coins:
+            self.coins[coin] += money_input.coins[coin]
 
 
 class transfer:
