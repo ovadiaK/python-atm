@@ -44,7 +44,7 @@ Scenario: withdrawing 20$ should return bills
     Then server responds with 200 status ok
 
 
-Scenario: refill api can refill the atm money
+Scenario: refill atm with bills
   Given server is running
   And no bills left
   When refilling 20$ bill

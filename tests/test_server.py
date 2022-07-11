@@ -2,21 +2,50 @@ from pytest_bdd import scenario, given, when, then
 from pathlib import Path
 import pytest
 
-
 featureFile = 'atm_server.feature'
 BASE_DIR = Path(__file__).resolve().parent.parent
 FEATURE_FILE = BASE_DIR.joinpath('features').joinpath(featureFile).__str__()
 
 
-@scenario(FEATURE_FILE, 'server starts and passed health checks')
-def test_server():
-    print("End of atm_server test")
-    pass
-
-
 def pytest_configure():
     pytest.response = ''
     pytest.json = ''
+
+
+def passed(name):
+    print(name, "passed")
+    pass
+
+
+def withdraw_amount(client, amount):
+    rv = client.post("/withdrawal", json={"amount": amount})
+    pytest.response = rv
+    pytest.json = rv.get_json()
+
+
+def refill_atm(client, json_struct):
+    rv = client.post("/refill", json=json_struct)
+    pytest.response = rv
+    pytest.json = rv.get_json()
+
+
+server_starts = 'server starts and passed health checks'
+withdraw_coin = 'withdrawing 1$ returns 1$ coin'
+withdraw_bills = 'withdrawing 20$ should return bills'
+more_money_than_loaded = 'withdrawing more money than loaded'
+decimal_will_be_floored = 'withdrawing with too small decimal will be floored'
+is_limited_to_ = 'withdrawing is limited to 2000$'
+exception = 'too many coins will throw exception'
+refill_api_status_ok = 'refill api responds with status 200'
+refill_bills = 'refill atm with bills'
+refill_coins = 'refill empty atm with coins'
+invalid_bill = 'refill with invalid bill'
+invalid_coin = 'refill with invalid coin'
+
+
+@scenario(FEATURE_FILE, server_starts)
+def test_server():
+    passed(server_starts)
 
 
 @given('server is running')
@@ -34,10 +63,9 @@ def server_responds_pong():
     assert pytest.response.data == b'pong'
 
 
-@scenario(FEATURE_FILE, 'withdrawing 1$ returns 1$ coin')
+@scenario(FEATURE_FILE, withdraw_coin)
 def test_withdrawing_one_dollar():
-    print("End of withdrawing 1$ test")
-    pass
+    passed(withdraw_coin)
 
 
 @when('withdrawing 1$')
@@ -45,21 +73,14 @@ def withdrawing_one_dollar(client):
     withdraw_amount(client, 1)
 
 
-def withdraw_amount(client, amount):
-    rv = client.post("/withdrawal", json={"amount": amount})
-    pytest.response = rv
-    pytest.json = rv.get_json()
-
-
 @then('receiving 1$ coin')
 def receiving_one_dollar():
     assert pytest.json == {"result": {"bills": [{}], "coins": [{"1": 1}]}}
 
 
-@scenario(FEATURE_FILE, 'withdrawing 20$ should return bills')
+@scenario(FEATURE_FILE, withdraw_bills)
 def test_return_20_dollar():
-    print("End of withdrawing 20$ test")
-    pass
+    passed(withdraw_bills)
 
 
 @when('withdrawing 20$')
@@ -72,10 +93,9 @@ def receiving_20_dollar_bill():
     assert pytest.json == {"result": {"bills": [{"20": 1}], "coins": [{}]}}
 
 
-@scenario(FEATURE_FILE, 'withdrawing more money than loaded')
+@scenario(FEATURE_FILE, more_money_than_loaded)
 def test_more_than_max_amount(client):
-    print("End of test more than allowed amount")
-    pass
+    passed(more_money_than_loaded)
 
 
 @given('is loaded with 1000$')
@@ -94,10 +114,9 @@ def more_than_exists():
     assert pytest.json == {"maximum": 1000}
 
 
-@scenario(FEATURE_FILE, 'withdrawing with too small decimal will be floored')
+@scenario(FEATURE_FILE, decimal_will_be_floored)
 def test_too_small_decimal():
-    print("too small decimal test passed")
-    pass
+    passed(decimal_will_be_floored)
 
 
 @when('withdrawing 20.00001$')
@@ -105,10 +124,9 @@ def withdrawing_too_small(client):
     withdraw_amount(client, 20.00001)
 
 
-@scenario(FEATURE_FILE, 'withdrawing is limited to 2000$')
+@scenario(FEATURE_FILE, is_limited_to_)
 def test_more_than_2000():
-    print('withdrawing more than 2000 test passed')
-    pass
+    passed(is_limited_to_)
 
 
 @when('withdrawing 2200$')
@@ -121,10 +139,9 @@ def receive_max():
     assert pytest.json == {'result': {'bills': [{'100': 4, '20': 10, '200': 7}], 'coins': [{}]}}
 
 
-@scenario(FEATURE_FILE, 'too many coins will throw exception')
+@scenario(FEATURE_FILE, exception)
 def test_too_many_coins():
-    print('throwing too many coins exception passed')
-    pass
+    passed(exception)
 
 
 @given('no bills left')
@@ -144,16 +161,14 @@ def too_many_coins_exception():
     assert pytest.json == {"error": "TooManyCoinsException"}
 
 
-@scenario(FEATURE_FILE, 'refill api responds with status 200')
+@scenario(FEATURE_FILE, refill_api_status_ok)
 def test_refill_responds_ok():
-    print('refill api responds with status 200 passed')
-    pass
+    passed(refill_api_status_ok)
 
 
-@scenario(FEATURE_FILE, 'refill api can refill the atm money')
+@scenario(FEATURE_FILE, refill_bills)
 def test_refill_20_dollar():
-    print('refill api can refill the atm money passed')
-    pass
+    passed(refill_bills)
 
 
 @when('refilling 20$ bill')
@@ -162,18 +177,9 @@ def refilling_20_dollar(client):
     refill_atm(client, json_struct)
 
 
-def refill_atm(client, json_struct):
-    rv = client.post("/refill", json=json_struct)
-    pytest.response = rv
-    pytest.json = rv.get_json()
-
-
 @then('server responds with 200 status ok')
 def status_ok():
     assert pytest.response.status_code == 200
-
-
-refill_coins = 'refill empty atm with coins'
 
 
 @scenario(FEATURE_FILE, refill_coins)
@@ -199,9 +205,6 @@ def got_4_5_dollar_coins():
     assert pytest.json == {"result": {"bills": [{}], "coins": [{"5": 4}]}}
 
 
-invalid_bill = 'refill with invalid bill'
-
-
 @scenario(FEATURE_FILE, invalid_bill)
 def test_invalid_bill():
     print(invalid_bill, "passed")
@@ -219,13 +222,9 @@ def client_error():
     assert pytest.response.status_code == 400
 
 
-invalid_coin = 'refill with invalid coin'
-
-
 @scenario(FEATURE_FILE, invalid_coin)
 def test_invalid_coin():
-    print(invalid_coin, "passed")
-    pass
+    passed(invalid_coin)
 
 
 @when('refilling with 6$ coin')
