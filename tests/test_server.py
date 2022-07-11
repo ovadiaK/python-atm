@@ -41,6 +41,8 @@ refill_bills = 'refill atm with bills'
 refill_coins = 'refill empty atm with coins'
 invalid_bill = 'refill with invalid bill'
 invalid_coin = 'refill with invalid coin'
+invalid_json_refill = 'invalid json to refill endpoint'
+invalid_json_withdrawal = 'invalid json to withdrawal endpoint'
 
 
 @scenario(FEATURE_FILE, server_starts)
@@ -231,3 +233,26 @@ def test_invalid_coin():
 def refill_invalid_coin(client):
     json_struct = {"bills": {}, "coins": {"6": 1}}
     refill_atm(client, json_struct)
+
+
+@scenario(FEATURE_FILE, invalid_json_refill)
+def test_invalid_refill():
+    passed(invalid_json_refill)
+
+
+@when('posting invalid json to refill')
+def invalid_refill(client):
+    json_struct = {"invalid": {}}
+    refill_atm(client, json_struct)
+
+
+@scenario(FEATURE_FILE, invalid_json_withdrawal)
+def test_invalid_withdrawal():
+    passed(invalid_json_withdrawal)
+
+
+@when('posting invalid json to withdrawal')
+def invalid_withdrawal(client):
+    json_struct = {"invalid": {}}
+    rv = client.post("/withdrawal", json=json_struct)
+    pytest.response = rv

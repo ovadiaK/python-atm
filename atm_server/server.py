@@ -22,13 +22,22 @@ def create_app():
 
     atm = create_datastore()
 
+    @app.route("/")
+    def welcome():
+        return 'welcome to the atm!</br></br> post {"bills": {"200":1}, "coins": {"5": 1}} to "/refill" in order to ' \
+               'refill the atm</br></br> post {"amount": 512} to "/withdrawal" in order to withdraw</br></br> hint: ' \
+               'you may want to use curl or postman '
+
     @app.route("/health")
     def health():
         return "pong", 200
 
     @app.route("/refill", methods=['POST'])
     def refill():
-        input_money = parse_refill_input()
+        try:
+            input_money = parse_refill_input()
+        except:
+            return "bad request", 400
         if not input_is_valid(input_money):
             return jsonify("invalid currency"), 400
         atm.refill(input_money)
@@ -36,7 +45,10 @@ def create_app():
 
     @app.route("/withdrawal", methods=['POST'])
     def withdraw():
-        amount = parse_withdrawal_input()
+        try:
+            amount = parse_withdrawal_input()
+        except:
+            return "bad request", 400
         res = atm.withdraw(amount)
         if 'maximum' in res:
             return jsonify(res), 409

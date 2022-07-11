@@ -68,3 +68,13 @@ Scenario: refill atm with bills
     Given server is running
     When refilling with 6$ coin
     Then server responds with 400
+
+    Scenario: invalid json to refill endpoint
+      Given server is running
+      When posting invalid json to refill
+      Then server responds with 400
+
+      Scenario: invalid json to withdrawal endpoint
+        Given server is running
+        When posting invalid json to withdrawal
+        Then server responds with 400
