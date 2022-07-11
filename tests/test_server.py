@@ -2,28 +2,15 @@ from pytest_bdd import scenario, given, when, then
 from pathlib import Path
 import pytest
 
-from server import create_app
 
-featureFile = 'server.feature'
+featureFile = 'atm_server.feature'
 BASE_DIR = Path(__file__).resolve().parent.parent
 FEATURE_FILE = BASE_DIR.joinpath('features').joinpath(featureFile).__str__()
 
 
-@pytest.fixture
-def app():
-    app = create_app()
-    return app
-
-
-@pytest.fixture
-def client(app):
-    with app.test_client() as client:
-        return client
-
-
 @scenario(FEATURE_FILE, 'server starts and passed health checks')
 def test_server():
-    print("End of server test")
+    print("End of atm_server test")
     pass
 
 

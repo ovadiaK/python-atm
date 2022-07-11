@@ -1,4 +1,3 @@
-import math
 import os
 
 from flask import Flask, make_response, request, jsonify

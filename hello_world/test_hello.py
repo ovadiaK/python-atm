@@ -2,7 +2,7 @@ from pytest_bdd import scenario, given, when, then
 from pathlib import Path
 import pytest
 
-from server import set_hello_world
+from atm_server import set_hello_world
 
 featureFile = 'hello.feature'
 BASE_DIR = Path(__file__).resolve().parent
