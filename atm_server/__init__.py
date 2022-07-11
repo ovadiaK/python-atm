@@ -33,9 +33,7 @@ def create_app():
     def refill():
         input_money = parse_refill_input()
         if not input_is_valid(input_money):
-            response = jsonify("invalid currency")
-            response.status_code = 400
-            return response
+            return jsonify("invalid currency"), 400
         atm.refill(input_money)
         return "ok"
 
@@ -44,9 +42,7 @@ def create_app():
         amount = parse_withdrawal_input()
         res = atm.withdraw(amount)
         if 'maximum' in res:
-            response = jsonify(res)
-            response.status_code = 409
-            return response
+            return jsonify(res), 409
         if res is 'TooManyCoinsException':
             return jsonify({"error": res}), 409
         return res
