@@ -1,8 +1,7 @@
 import math
 import os
 
-from flask import Flask, make_response, request, jsonify, json, Response, render_template
-from werkzeug.exceptions import abort
+from flask import Flask, make_response, request, jsonify
 
 valid_bills = {"200", "100", "20"}
 valid_coins = {"10", "5", "1", "0.1", "0.01"}
